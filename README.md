@@ -11,7 +11,6 @@ All commands should be executed from top level directory of the project:
 cd /lustre/scratch116/tol/teams/lawniczak/data/badass
 ```
 
-
 Purge dups with changed thresholds, purging within contigs, and subsequent QC (BUSCO, Merqury, KAT)
 
 ```
