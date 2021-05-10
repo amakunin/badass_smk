@@ -77,6 +77,7 @@ Anopheles_aquasalis/working/idAnoAquaMG-Q_14.hifiasm.20210327/mito-purging/final
 - frameshift indel in ND5, no assembly in reads, tried finding in hicanu assembly 
 - TODO check annotation and read alignments 
 - hicanu assembly looks good, replacing 
+
 Anopheles_aquasalis/working/idAnoAquaMG-Q_19.hifiasm.20210327/mito-purging/final_mitogenome.check.txt
 - OK
 
