@@ -1,0 +1,9 @@
+# query genbank for mitohifi
+email: "am60@sanger.ac.uk"
+# purge dups options
+# purge inside contigs - setting to True requires 
+# care in downstream handling
+purge_no_e: False
+# purge_dups cutoffs - estimated by default
+# override by `--config purge_cutoffs="5,40,100"`
+purge_cutoffs: "-,-,-"

@@ -1,0 +1,7 @@
+name: purge_dups
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - perl

@@ -1,0 +1,7 @@
+name: mitohifi_post
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - ucsc-fafilter=377

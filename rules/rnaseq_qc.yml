@@ -1,0 +1,10 @@
+name: rnaseq_qc
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - cutadapt =3.4
+  - star =2.7.8a
+  - picard =2.25.3
+  - samtools =1.9
