@@ -13,13 +13,16 @@ rule primary_contig_names:
         "zcat {input} | grep '>' | sed 's/>//g' > {output}"
 
 # sort hic crams by name - applicable to gam/fun
+# remove secondary alignments
 rule collate_hic:
     input: "{species}/genomic_data/{hic_sample}/hic-arima2/IRODS.{hic_sample}.hic-arima2.fofn"
     output: touch("{species}/genomic_data/{hic_sample}/hic-arima2/coord_sorted/collate.done")
-    params: working_dir="{species}/genomic_data/{hic_sample}/hic-arima2"
+    params:
+        queue="long",
+        working_dir="{species}/genomic_data/{hic_sample}/hic-arima2"
     conda: "samtools.yml"
     threads: 8
-    resources: mem_mb=4000
+    resources: mem_mb=8000
     shell: 
         """
         cd {params.working_dir}
@@ -29,7 +32,7 @@ rule collate_hic:
         for f in *.cram
         do
             mv -v $f* coord_sorted/.
-            samtools collate --threads {threads} -o $f coord_sorted/$f temp_collate
+            samtools view -h -F 0x800 coord_sorted/$f | samtools collate --threads {threads} -o $f - temp_collate
         done
         """
 

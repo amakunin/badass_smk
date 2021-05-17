@@ -1,8 +1,7 @@
-name: mitohifi_post
+name: fastool
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - ucsc-fafilter=377
-  - seqtk=1.3
+  - fastool=0.1.4

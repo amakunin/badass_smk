@@ -1,14 +1,17 @@
 import os
 
+# key output files are protected in case of incomplete run
+
 rule salsa_scaffolding:
     input:
         purged="{species}/working/{sample}.{assembler}.{date}/{purge_dir}/purged.fa",
         hic_fofn="{species}/working/{sample}.{assembler}.{date}/wdl-{purge_dir}/{hic_sample}.hic-arima2.fofn"
     output:
         touch("{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}.done"),
-        "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta",
-        "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa/salsa_scaffolds.hic"
+        protected("{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta"),
+        protected("{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa/salsa_scaffolds.hic")
     params:
+        queue="long",
         salsa="/software/tola/installs/tol-workflows/vr-runner/run-salsa",
         arima_motif="GATC,GANTC,CTNAG,TTAA",
         working_dir="{species}/working/{sample}.{assembler}.{date}",
@@ -31,11 +34,11 @@ rule salsa_scaffolding:
             --ref-fa {params.purged} --outdir {params.out_dir}
         exitcode=$? 
         >&2 echo $exitcode
-        if [ $exitcode -eq 1 ]
+        if [ $exitcode -eq 111 ] || [ $exitcode -eq 0 ]
         then
-            exit 1
-        else
             exit 0
+        else
+            exit 1
         fi
         """ 
 
@@ -45,9 +48,12 @@ rule salsa_scaffolding_polished:
         hic_fofn="{species}/working/{sample}.{assembler}.{date}/wdl-{purge_dir}/{hic_sample}.hic-arima2.fofn"
     output:
         touch("{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}.done"),
-        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta",
-        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa/salsa_scaffolds.hic"
+        # hic failed several times for idAnoFuneDA-408_05, removing
+        # protected("{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa/salsa_scaffolds.hic")
+    # output should not be removed, putting in as log
+    log: "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta",
     params:
+        queue="long",
         salsa="/software/tola/installs/tol-workflows/vr-runner/run-salsa",
         arima_motif="GATC,GANTC,CTNAG,TTAA",
         working_dir="{species}/working/{sample}.{assembler}.{date}",

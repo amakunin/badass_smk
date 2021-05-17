@@ -67,6 +67,14 @@ rule replace_mt_in_asm:
         "faFilter -v name=$ctg_name {input.asm} /dev/stdout | "
         "cat /dev/stdin {input.mt} > {output}"
 
+# cut purge_e assemblies by Ns
+# rule replace_mt_in_asm_cut_by_n:
+#     input:
+#         primary="{species}/working/{sample}.{assembler}.{date}/{purge_dir}/purged.fa.gz",
+#         htigs="{species}/working/{sample}.{assembler}.{date}/{purge_dir}/purged.htigs.fa.gz",
+#         mt="{species}/working/{sample}.{assembler}.{date}/mito_{purge_dir}/final_mitogenome.fasta"
+
+
 rule replace_mt_with_reads:
     input:
          asm="{species}/working/{sample}.{assembler}.{date}/mito-{purge_dir}/purged_and_htigs.fa",

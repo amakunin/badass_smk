@@ -33,6 +33,7 @@ include: 'rules/rnaseq_qc.smk'
 include: 'rules/salsa.smk'
 include: 'rules/longranger.smk'
 include: 'rules/polish.smk'
+include: 'rules/nucmer_dotplot.smk'
 
 
 # rules shared between tools

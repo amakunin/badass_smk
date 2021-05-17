@@ -1,4 +1,3 @@
-
 rule cutadapt:
     input:
         R1="{species}/transcriptomic_data/{sample}/rna-seq/{sample}.R1.fastq.gz",
@@ -13,6 +12,8 @@ rule cutadapt:
     shell:
         "cutadapt -m {params.min_len} -a AGATCGGAAGAGC -A AGATCGGAAGAGC -o {output.R1} -p {output.R2} "
         "{input.R1} {input.R2} > {log}"
+
+## Reference-based
 
 rule star_index:
     input:
@@ -62,10 +63,46 @@ rule mark_duplicates:
 rule samtools_stats:
     input:
         bam="{species}/working/{rna_sample}.star.{dna_sample}.{asm}.{date}.{purge_dir}/{rna_sample}.markdup.bam",
-        ref="{species}/working/{dna_sample}.{asm}.{date}/{purge_dir}/purged.fa.gz"
+        ref="{species}/working/{dna_sample}.{asm}.{date}/{purge_dir}/purged.fa"
     output:
         "{species}/working/{rna_sample}.star.{dna_sample}.{asm}.{date}.{purge_dir}/{rna_sample}.markdup.stats"
     conda: "rnaseq_qc.yml"
     resources: mem_mb=2048
     shell:
         "samtools stats -r {input.ref} {input.bam} > {output}"
+
+## assembly-based
+
+rule reads_for_trinity:
+    input:
+        "{species}/transcriptomic_data/{sample}/rna-seq/trimmed/{sample}.R{read}.fastq.gz"
+    output:
+        temp("{species}/working/{sample}.trinity/{sample}.R{read}.fasta")
+    params: read="{read}"
+    conda: "fastool.yml"
+    shell:
+        "zcat {input} | fastool --to-fasta --append /{params.read} > {output}"
+
+rule trinity:
+    input:
+        left="{species}/working/{sample}.trinity/{sample}.R1.fasta",
+        right="{species}/working/{sample}.trinity/{sample}.R2.fasta"
+    output:
+        "{species}/working/{sample}.trinity/Trinity.fasta"
+    log:
+        "{species}/working/{sample}.trinity/Trinity.log"
+    params:
+        queue="long",
+        max_mem="20G", # link to resource
+        out_dir="{species}/working/{sample}.trinity/",
+        extra=""
+    threads: 8
+    resources:
+        mem_mb=20 * 1024
+    # wrapper:
+    #     "0.74.0/bio/trinity"
+    singularity: "scripts/trinityrnaseq-v2.12.0.sif"
+    shell:
+        "Trinity --left {input.left} --right {input.right} --CPU {threads} "
+        " --max_memory {params.max_mem} --seqType fa --SS_lib_type RF "
+        " --output {params.out_dir} {params.extra} 2> {log}"
