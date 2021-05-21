@@ -106,3 +106,13 @@ rule trinity:
         "Trinity --left {input.left} --right {input.right} --CPU {threads} "
         " --max_memory {params.max_mem} --seqType fa --SS_lib_type RF "
         " --output {params.out_dir} {params.extra} 2> {log}"
+
+rule trinity_archive:
+    input:
+        "{species}/working/{sample}.trinity/Trinity.fasta"
+    output:
+        "{species}/working/{sample}.trinity/read_partitions.tar.gz"
+    params:
+        arc_dir="{species}/working/{sample}.trinity/read_partitions"
+    shell:
+        "tar -czf {output} {params.arc_dir} && rm -rf {params.arc_dir}"

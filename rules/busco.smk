@@ -27,20 +27,20 @@ rule busco_purged:
 # singularity cannot mkdir, workaround
 rule init_busco_scaff:
     input: 
-        "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta"
+        "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/scaffolds_FINAL.fasta"
     output: 
-        "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/busco5/init.done"
+        "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/busco5/init.done"
     shell: "touch {output}"
 
 
 rule busco_scaff:
     input: 
-        fa="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta",
-        flag="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/busco5/init.done"
-    output: touch("{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/busco5/busco.done")
+        fa="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/scaffolds_FINAL.fasta",
+        flag="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/busco5/init.done"
+    output: touch("{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/busco5/busco.done")
     params: 
-        outfolder="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/busco5",
-        fa="../out.break.salsa/scaffolds_FINAL.fasta",
+        outfolder="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/busco5",
+        fa="../scaffolds_FINAL.fasta",
         lineage="diptera_odb10"
     singularity: "scripts/busco5.sif" 
     resources:

@@ -6,10 +6,13 @@ To use, install snakemake (tested on 5.27.4) and configure an [LSF profile](http
 
 ## Examples
 
-All commands should be executed from top level directory of the project:
+All commands should be executed from top level directory of the project with snakemake in environment
 ```
 cd /lustre/scratch116/tol/teams/lawniczak/data/badass
+conda activate smk
 ```
+
+### Contig adjustments
 
 Purge dups with changed thresholds, purging within contigs, and subsequent QC (BUSCO, Merqury, KAT)
 
@@ -29,6 +32,8 @@ cd Anopheles_coustani/working/idAnoCousDA-361_x.hifiasm.20210327/mito-purging/
 mv purged_and_htigs_and_mito.fasta purged_and_htigs_and_mito.fa
 ```
 
+### Scaffolding
+
 Prior to scaffolding in funestus and gambiae, need to collate crams and remove secondary alignments as those were aligned to reference and sorted by coordinate
 ```
 bash badass_smk/submit.sh -n Anopheles_gambiae/genomic_data/idAnoGambDA-150_06/hic-arima2/coord_sorted/collate.done
@@ -42,7 +47,7 @@ grep ">ptg" purged_and_htigs_and_mito_cutN.fasta | sed 's/>//g' > ../wdl-purging
 cp purged_and_htigs_and_mito_cutN.fasta purged_and_htigs_and_mito.fa
 ```
 
-Polishing and scaffolding with snakemake (translated from wdl due to difficulties with debugging)
+Polishing and scaffolding with snakemake (translated from wdl due to difficulties with debugging). Now also includes tweaked salsa scaffolds.
 ```
 source /software/tola/installs/vr-runner/etc/bashrc
 bash badass_smk/submit.sh -n Anopheles_funestus/working/idAnoFuneDA-408_06.hifiasm.20210327/scaff_polished.purging.hic.idAnoFuneDA-408_05.qc.done
@@ -59,39 +64,25 @@ Nucmer dotplots vs reference
 bash badass_smk/submit.sh -n Anopheles_funestus/working/dot/idAnoFuneDA-402_05.hifiasm.20210327.scaff.purging.hic.idAnoFuneDA-402_09.vs.afunf3.dotprep.done
 ```
 
+### RNAseq data QC
 
-RNAseq data QC - adapter trimming and alignment to ref
+Adapter trimming and alignment to ref
 ```
 bash badass_smk/submit.sh -n Anopheles_aquasalis/working/idAnoAquaMG-Q_16.star.idAnoAquaMG-Q_14.hifiasm.20210327.purging/idAnoAquaMG-Q_16.markdup.stats
 ```
 
+Transcriptome assembly and busco
+```
+bash badass_smk/submit.sh -n Anopheles_darlingi/working/idAnoDarlMG-G_01.trinity/busco5/busco.done
+```
+
 ## WIP
 
-### scaffold without purge_e
-Anopheles_funestus/working/idAnoFuneDA-402_03.hifiasm.20210327/scaff_polished.purging.hic.idAnoFuneDA-402_09.qc.done
+### trinity & busco
 
-### scaffold after hic collation
-Anopheles_funestus/working/idAnoFuneDA-408_06.hifiasm.20210327/scaff_polished.purging.hic.idAnoFuneDA-408_05.qc.done
-Anopheles_funestus/working/idAnoFuneDA-408_07.hifiasm.20210327/scaff_polished.purging.hic.idAnoFuneDA-408_05.qc.done
+re-run all after fixing errors and 
 
-### nucmer
-Anopheles_funestus/working/dot/idAnoFuneDA-386_01.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-386_05.vs.afunf3.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-386_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-386_05.vs.afunf3.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-402_03.hifiasm.20210327.scaff_polished.purging_e.hic.idAnoFuneDA-402_09.vs.afunf3.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-414_04.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-414_06.vs.afunf3.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-416_04.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-416_06.vs.afunf3.dotprep.done
-
-### nucmer vs good asm
-
-Anopheles_funestus/working/dot/idAnoFuneDA-386_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-386_05/vs.idAnoFuneDA-386_01.scaff_polished.purging.hic.idAnoFuneDA-386_05.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-386_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-386_05/vs.idAnoFuneDA-402_03.scaff_polished.purging_e.hic.idAnoFuneDA-402_09.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-386_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-386_05/vs.idAnoFuneDA-402_05.scaff.purging.hic.idAnoFuneDA-402_09.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-386_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-386_05/vs.idAnoFuneDA-414_04.scaff_polished.purging.hic.idAnoFuneDA-414_06.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-386_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-386_05/vs.idAnoFuneDA-416_05.scaff.purging.hic.idAnoFuneDA-416_06.dotprep.done
-Anopheles_funestus/working/dot/idAnoFuneDA-386_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-386_05/vs.idAnoFuneDA-416_04.scaff_polished.purging.hic.idAnoFuneDA-416_06.dotprep.done
-
-## TODO
-
+Anopheles_aquasalis/working/idAnoAquaMG-Q_16.trinity/busco5/busco.done Anopheles_aquasalis/working/idAnoAquaMG-Q_21.trinity/busco5/busco.done Anopheles_bellator/working/idAnoBellAS-SP24_08.trinity/busco5/busco.done Anopheles_coluzzii/working/idAnoColuKV-30_1.trinity/busco5/busco.done Anopheles_coluzzii/working/idAnoColuKV-32_10.trinity/busco5/busco.done Anopheles_coluzzii/working/idAnoColuKV-32_24.trinity/busco5/busco.done Anopheles_coustani/working/idAnoCousDA-54_x.trinity/busco5/busco.done Anopheles_coustani/working/idAnoCousDA-63_x.trinity/busco5/busco.done Anopheles_cruzii/working/idAnoCruzAS-RS32_09.trinity/busco5/busco.done Anopheles_darlingi/working/idAnoDarlJC-H15_05.trinity/busco5/busco.done Anopheles_darlingi/working/idAnoDarlMG-G_01.trinity/busco5/busco.done Anopheles_darlingi/working/idAnoDarlMG-G_02.trinity/busco5/busco.done Anopheles_darlingi/working/idAnoDarlMG-H_11.trinity/busco5/busco.done Anopheles_funestus/working/idAnoFuneDA-146_02.trinity/busco5/busco.done Anopheles_funestus/working/idAnoFuneDA-367_03.trinity/busco5/busco.done Anopheles_funestus/working/idAnoFuneDA-367_04.trinity/busco5/busco.done Anopheles_gambiae/working/idAnoGambDA-150_10.trinity/busco5/busco.done Anopheles_gambiae/working/idAnoGambDA-407_08.trinity/busco5/busco.done Anopheles_gambiae/working/idAnoGambNW-F1_10.trinity/busco5/busco.done Anopheles_gambiae/working/idAnoGambNW-F1_9.trinity/busco5/busco.done Anopheles_maculipalpis/working/idAnoMacuDA-401_x.trinity/busco5/busco.done Anopheles_marshallii/working/idAnoMarsDA-426_03.trinity/busco5/busco.done Anopheles_marshallii/working/idAnoMarsDA-426_10.trinity/busco5/busco.done Anopheles_moucheti/working/idAnoMoucSN-F4_01.trinity/busco5/busco.done Anopheles_moucheti/working/idAnoMoucSN-F7_x.trinity/busco5/busco.done Anopheles_nili/working/idAnoNiliSN-F5_02.trinity/busco5/busco.done Anopheles_nili/working/idAnoNiliSN-F5_M.trinity/busco5/busco.done Anopheles_oryzalimnetes/working/idAnoOryzAS-SP141_10.trinity/busco5/busco.done Anopheles_oryzalimnetes/working/idAnoOryzAS-SP141_11.trinity/busco5/busco.done Anopheles_ziemanni/working/idAnoZiemDA-140_03.trinity/busco5/busco.done Anopheles_ziemanni/working/idAnoZiemDA-A7_x.trinity/busco5/busco.done
 
 ### gamb collate (post-funestus)
 Anopheles_gambiae/genomic_data/idAnoGambDA-150_06/hic-arima2/coord_sorted/collate.done
@@ -104,7 +95,18 @@ Anopheles_gambiae/working/idAnoGambDA-407_04.hifiasm.20210327/scaff_polished.pur
 Anopheles_gambiae/working/idAnoGambDA-407_05.hifiasm.20210327/scaff_polished.purging.hic.idAnoGambDA-407_12.qc.done
 Anopheles_gambiae/working/idAnoGambDA-407_15.hifiasm.20210327/scaff_polished.purging.hic.idAnoGambDA-407_12.qc.done
 Anopheles_gambiae/working/idAnoGambNW-F1_1.hifiasm.20210327/scaff_polished.purging.hic.idAnoGambNW-F1_3.qc.done
-Anopheles_gambiae/working/idAnoGambNW-F1_2.hifiasm.20210327/scaff_polished.purging.hic.idAnoGambNW-F1_3.qc.done
+Anopheles_gambiae/working/idAnoGambNW-F1_2.hifiasm.20210327/scaff_polished.purging_e.hic.idAnoGambNW-F1_3.qc.done
+
+### nucmer
+
+re-do all funestus after tweaking
+
+
+## TODO
+
+- Trinity archive
+- gambiae post-collate run salsa fixes
+- gambiae dot vs pest
 
 
 ## Results

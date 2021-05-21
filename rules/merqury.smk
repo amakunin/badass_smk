@@ -30,23 +30,23 @@ rule merqury_purged:
 
 # singularity cannot mkdir, workaround
 rule init_merqury_scaffolds:
-    input: "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta"
-    output: "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/merqury/init.done"
+    input: "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{salsa_dir}/scaffolds_FINAL.fasta"
+    output: "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{salsa_dir}/merqury/init.done"
     shell: "touch {output}"
 
 rule merqury_scaffolds:
     input:
-        scaff="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta",
+        scaff="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{salsa_dir}/scaffolds_FINAL.fasta",
         htigs="{species}/working/{sample}.{assembler}.{date}/polished-{purge_dir}/haplotigs.fasta",
-        flag="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/merqury/init.done"
+        flag="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{salsa_dir}/merqury/init.done"
     output:
-        touch("{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/merqury/merqury.done")
+        touch("{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{salsa_dir}/merqury/merqury.done")
     params: 
-        outfolder="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/merqury",
+        outfolder="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{salsa_dir}/merqury",
         # not checking that these data exist
-        meryl_10x="../../../../genomic_data/{sample}/10x/preqc/{sample}.10x.k21.meryl/",
-        purged="../out.break.salsa/scaffolds_FINAL.fasta",
-        htigs="../../polished-{purge_dir}/haplotigs.fasta",
+        meryl_10x="../../../../../genomic_data/{sample}/10x/preqc/{sample}.10x.k21.meryl/",
+        purged="../scaffolds_FINAL.fasta",
+        htigs="../../../polished-{purge_dir}/haplotigs.fasta",
         prefix="meryl"
     singularity: "scripts/merqury-1.1.sif" 
     resources:

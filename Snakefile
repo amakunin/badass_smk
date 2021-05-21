@@ -2,7 +2,7 @@
 
 configfile: 'badass_smk/config.yaml'
 
-localrules: gunzip_fa, purge_and_qc, mitohifi_asm_and_reads
+localrules: gunzip_fa, purge_and_qc, mitohifi_asm_and_reads, salsa_scaffold_and_qc, salsa_scaffold_and_qc_polished
 
 # commonly used wildcards should not include dots or slashes
 common_constraint = '[^./]+'
@@ -34,6 +34,7 @@ include: 'rules/salsa.smk'
 include: 'rules/longranger.smk'
 include: 'rules/polish.smk'
 include: 'rules/nucmer_dotplot.smk'
+include: 'rules/curation_input.smk'
 
 
 # rules shared between tools
@@ -90,9 +91,14 @@ rule salsa_scaffold_and_qc:
     input:
         # salsa scaffold
         "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}.done",
-        # qc
-        "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/busco5/busco.done",
-        "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/kmc/{sample}.scaff.ccs.k21.kat.png"
+        # # qc
+        # "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa/busco5/busco.done",
+        # "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa/kmc/{sample}.scaff.ccs.k21.kat.png",
+        # refine scaffolds
+        "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/salsa2.done",
+        # refined qc
+        "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done",
+        "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/kmc/{sample}.scaff.ccs.k21.kat.png"
     output:
         "{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}.qc.done"
     shell:
@@ -107,10 +113,14 @@ rule salsa_scaffold_and_qc_polished:
         "{species}/working/{sample}.{assembler}.{date}/polished-{purge_dir}/primary.fasta",
         # salsa scaffold primary
         "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}.done",
+        # refine scaffolds
+        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/salsa2.done",
         # qc
-        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/busco5/busco.done",
-        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/kmc/{sample}.scaff_polished.ccs.k21.kat.png",
-        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/merqury/merqury.done"
+        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done",
+        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/kmc/{sample}.scaff_polished.ccs.k21.kat.png",
+        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/merqury/merqury.done",
+        # draft curation yaml
+        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{sample}.draft.yaml"
     output:
         "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}.qc.done"
     shell:

@@ -28,15 +28,15 @@ rule dfguan_kat_10x:
 
 # for ccs and scaffolds, use am60 drafts
 rule dfguan_kmc_count_scaffolds:
-    input: "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/out.break.salsa/scaffolds_FINAL.fasta"
+    input: "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/scaffolds_FINAL.fasta"
     output:
-        "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.k21.kmc_pre",
-        "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.k21.kmc_suf",
+        "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21.kmc_pre",
+        "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21.kmc_suf",
     params:
         kmc_bin="/nfs/users/nfs_d/dg30/luster_dg30/pub/kmc_bins/bin/kmc",
         kmer_size=21,
-        output_prefix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.k21",
-        work_dir="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/tmp.{sample}.{scaff_dir}.k21",
+        output_prefix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21",
+        work_dir="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/tmp.{sample}.{scaff_dir}.k21",
         mem_gb=16 # don"t forget to link to resources.mem_mb
     resources:
         mem_mb=16 * 1024
@@ -76,13 +76,13 @@ rule dfguan_kmc_count_ccs_reads:
 
 rule dfguan_kmc_analyse_scaffolds_ccs:
     input: 
-        assembly="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.k21.kmc_suf",
+        assembly="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21.kmc_suf",
         reads="{species}/genomic_data/{sample}/pacbio/kmc/{sample}.ccs.k21.kmc_suf"
     output:
-        matrix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.ccs.k21.mx"
+        matrix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.ccs.k21.mx"
     params:
         kmc_bin="/nfs/users/nfs_d/dg30/luster_dg30/pub/kmc_bins/bin/kmc_tools",
-        assembly_prefix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.k21",
+        assembly_prefix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21",
         reads_prefix="{species}/genomic_data/{sample}/pacbio/kmc/{sample}.ccs.k21"
     resources:
         mem_mb=4096
@@ -92,10 +92,10 @@ rule dfguan_kmc_analyse_scaffolds_ccs:
 
 rule dfguan_kat_plot:
     input:
-        matrix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.ccs.k21.mx"
+        matrix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.ccs.k21.mx"
     output: 
-        plot="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.ccs.k21.kat.png",
-        stacked_plot="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/kmc/{sample}.{scaff_dir}.ccs.k21.stacked.kat.png"
+        plot="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.ccs.k21.kat.png",
+        stacked_plot="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.ccs.k21.stacked.kat.png"
     conda: "dfguan_kat.yml"
     params:
         spectra="/software/grit/tools/KMC/bin/spectra.py"
