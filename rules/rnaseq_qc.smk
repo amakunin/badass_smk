@@ -116,3 +116,12 @@ rule trinity_archive:
         arc_dir="{species}/working/{sample}.trinity/read_partitions"
     shell:
         "tar -czf {output} {params.arc_dir} && rm -rf {params.arc_dir}"
+
+rule trinity_stats:
+    input:
+        "{species}/working/{sample}.trinity/Trinity.fasta"
+    output:
+        "{species}/working/{sample}.trinity/Trinity.stats"
+    conda: "assembly_stats.yml"
+    shell:
+        "assembly-stats {input} > {output}"
