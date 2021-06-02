@@ -10,7 +10,8 @@ rule generate_yaml_polished:
     input:
         kmc="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/kmc/{sample}.scaff_polished.ccs.k21.kat.png",
         busco="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done",
-        scaff="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.fasta"
+        scaff="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.fasta",
+        postsalsa="{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/postsalsa.done"
     output:
         "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{sample}.draft.yaml"
     params:
@@ -29,15 +30,15 @@ rule generate_yaml_polished:
                   'freebayes (v1.3.1)','MitoHiFi(v2)','salsa (v2.2-4c80ac1)'],
         notes=""
     run:
-        assert os.path.isfile(params.primary)
-        assert os.path.isfile(params.haplotigs)
+        assert os.path.isfile(params.primary), params.primary
+        assert os.path.isfile(params.haplotigs), params.haplotigs
         # skipping mito check to be validated manually
         if not os.path.isfile(params.mito):
             params.mito=''
-        assert os.path.isfile(params.agp)
-        assert os.path.isfile(params.hic)
-        assert os.path.isfile(params.pretext)
-        assert os.path.isfile(params.kmer_spectra_img)
+        assert os.path.isfile(params.agp), params.agp
+        assert os.path.isfile(params.hic), params.hic
+        assert os.path.isfile(params.pretext), params.pretext
+        assert os.path.isfile(params.kmer_spectra_img), params.kmer_spectra_img
 
         params.species = params.species.replace("_"," ")
 
