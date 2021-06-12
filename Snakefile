@@ -119,8 +119,8 @@ rule salsa_scaffold_and_qc_polished:
         "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done",
         "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/kmc/{sample}.scaff_polished.ccs.k21.kat.png",
         "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/merqury/merqury.done",
-        # draft curation yaml
-        "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/{sample}.draft.yaml"
+        # draft curation yaml 
+        # "{species}/assembly/draft/{sample}/{sample}.{assembler}.{date}.{purge_dir}.polished.hic.{hic_sample}.draft.yaml"
     output:
         "{species}/working/{sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}.qc.done"
     shell:

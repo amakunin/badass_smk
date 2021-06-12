@@ -76,11 +76,11 @@ rule salsa_scaffolding_polished:
             --ref-fa {params.polished_primary} --outdir {params.out_dir}
         exitcode=$? 
         >&2 echo $exitcode
-        if [ $exitcode -eq 1 ]
+        if [ $exitcode -eq 111 ] || [ $exitcode -eq 0 ]
         then
-            exit 1
-        else
             exit 0
+        else
+            exit 1
         fi
         """
 
@@ -147,3 +147,23 @@ rule postsalsa_refined:
             exit 1
         fi
         """
+
+# re-running juicer with more memory
+rule juicer:
+    input:
+        fa=("{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}"
+        "/out.break.salsa2/scaffolds_FINAL.fasta"),
+        aln=("{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}"
+        "/out.break.salsa2/alignments_sorted.txt"),
+        chrom_sizes=("{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}"
+        "/out.break.salsa2/scaffolds_FINAL.fasta.chrom.sizes")
+    output:
+        ("{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}"
+        "/out.break.salsa2/salsa_scaffolds.hic")
+    resources:
+        mem_mb=11000 # link to Xmx in shell
+    singularity: "/software/tola/images/juicer_tools-1.9.9.sif"
+    shell:
+        "java -Xms10g -Xmx10g -jar /usr/local/share/java/classes/juicer_tools.jar "
+        "pre {input.aln} {output} {input.chrom_sizes}"
+
