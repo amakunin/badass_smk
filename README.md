@@ -59,6 +59,15 @@ source /software/tola/installs/vr-runner/etc/bashrc
 bash badass_smk/submit.sh -n Anopheles_funestus/working/idAnoFuneDA-402_05.hifiasm.20210327/scaff.purging.hic.idAnoFuneDA-402_09.qc.done
 ```
 
+### Curation
+
+Curation inputs (including MAPQ0 pretext)
+```
+bash badass_smk/submit.sh -n Anopheles_funestus/assembly/draft/idAnoFuneDA-408_06.PB.asm1.purge1.polish1.scaff1/idAnoFuneDA-408_06.hifiasm.20210327.purging.polished.hic.idAnoFuneDA-408_05.draft.yaml
+```
+
+### Comparative
+
 Nucmer dotplots vs reference
 ```
 bash badass_smk/submit.sh -n Anopheles_funestus/working/dot/idAnoFuneDA-402_05.hifiasm.20210327.scaff.purging.hic.idAnoFuneDA-402_09.vs.afunf3.dotprep.done
@@ -76,40 +85,16 @@ Transcriptome assembly and busco
 bash badass_smk/submit.sh -n Anopheles_darlingi/working/idAnoDarlMG-G_01.trinity/busco5/busco.done
 ```
 
-## WIP
-
-### trinity & busco
-
-re-run all after fixing errors and 
-
-Anopheles_aquasalis/working/idAnoAquaMG-Q_16.trinity/busco5/busco.done Anopheles_aquasalis/working/idAnoAquaMG-Q_21.trinity/busco5/busco.done Anopheles_bellator/working/idAnoBellAS-SP24_08.trinity/busco5/busco.done Anopheles_coluzzii/working/idAnoColuKV-30_1.trinity/busco5/busco.done Anopheles_coluzzii/working/idAnoColuKV-32_10.trinity/busco5/busco.done Anopheles_coluzzii/working/idAnoColuKV-32_24.trinity/busco5/busco.done Anopheles_coustani/working/idAnoCousDA-54_x.trinity/busco5/busco.done Anopheles_coustani/working/idAnoCousDA-63_x.trinity/busco5/busco.done Anopheles_cruzii/working/idAnoCruzAS-RS32_09.trinity/busco5/busco.done Anopheles_darlingi/working/idAnoDarlJC-H15_05.trinity/busco5/busco.done Anopheles_darlingi/working/idAnoDarlMG-G_01.trinity/busco5/busco.done Anopheles_darlingi/working/idAnoDarlMG-G_02.trinity/busco5/busco.done Anopheles_darlingi/working/idAnoDarlMG-H_11.trinity/busco5/busco.done Anopheles_funestus/working/idAnoFuneDA-146_02.trinity/busco5/busco.done Anopheles_funestus/working/idAnoFuneDA-367_03.trinity/busco5/busco.done Anopheles_funestus/working/idAnoFuneDA-367_04.trinity/busco5/busco.done Anopheles_gambiae/working/idAnoGambDA-150_10.trinity/busco5/busco.done Anopheles_gambiae/working/idAnoGambDA-407_08.trinity/busco5/busco.done Anopheles_gambiae/working/idAnoGambNW-F1_10.trinity/busco5/busco.done Anopheles_gambiae/working/idAnoGambNW-F1_9.trinity/busco5/busco.done Anopheles_maculipalpis/working/idAnoMacuDA-401_x.trinity/busco5/busco.done Anopheles_marshallii/working/idAnoMarsDA-426_03.trinity/busco5/busco.done Anopheles_marshallii/working/idAnoMarsDA-426_10.trinity/busco5/busco.done Anopheles_moucheti/working/idAnoMoucSN-F4_01.trinity/busco5/busco.done Anopheles_moucheti/working/idAnoMoucSN-F7_x.trinity/busco5/busco.done Anopheles_nili/working/idAnoNiliSN-F5_02.trinity/busco5/busco.done Anopheles_nili/working/idAnoNiliSN-F5_M.trinity/busco5/busco.done Anopheles_oryzalimnetes/working/idAnoOryzAS-SP141_10.trinity/busco5/busco.done Anopheles_oryzalimnetes/working/idAnoOryzAS-SP141_11.trinity/busco5/busco.done Anopheles_ziemanni/working/idAnoZiemDA-140_03.trinity/busco5/busco.done Anopheles_ziemanni/working/idAnoZiemDA-A7_x.trinity/busco5/busco.done
-
-### gamb collate (post-funestus)
-Anopheles_gambiae/genomic_data/idAnoGambDA-150_06/hic-arima2/coord_sorted/collate.done
-Anopheles_gambiae/genomic_data/idAnoGambDA-407_12/hic-arima2/coord_sorted/collate.done
-Anopheles_gambiae/genomic_data/idAnoGambNW-F1_3/hic-arima2/coord_sorted/collate.done
-
-### gamb post-collate
-Anopheles_gambiae/working/idAnoGambDA-150_04.hifiasm.20210327/scaff.purging.hic.idAnoGambDA-150_06.qc.done
-Anopheles_gambiae/working/idAnoGambDA-407_04.hifiasm.20210327/scaff_polished.purging.hic.idAnoGambDA-407_12.qc.done
-Anopheles_gambiae/working/idAnoGambDA-407_05.hifiasm.20210327/scaff_polished.purging.hic.idAnoGambDA-407_12.qc.done
-Anopheles_gambiae/working/idAnoGambDA-407_15.hifiasm.20210327/scaff_polished.purging.hic.idAnoGambDA-407_12.qc.done
-Anopheles_gambiae/working/idAnoGambNW-F1_1.hifiasm.20210327/scaff_polished.purging.hic.idAnoGambNW-F1_3.qc.done
-Anopheles_gambiae/working/idAnoGambNW-F1_2.hifiasm.20210327/scaff_polished.purging_e.hic.idAnoGambNW-F1_3.qc.done
-
-### nucmer
-
-re-do all funestus after tweaking
-
-
-## TODO
-
-- Trinity archive
-- gambiae post-collate run salsa fixes
-- gambiae dot vs pest
+Remove assembly intermediate files (up to 100k per sample)
+```
+bash badass_smk/submit.sh -n Anopheles_darlingi/working/idAnoDarlMG-G_01.trinity/read_partitions.tar.gz
+```
 
 
 ## Results
+
+see [this table](https://docs.google.com/spreadsheets/d/1q0uxXEVn_n8Z8_hkwaqNoP9qYQbC0cooIZHnpUmZNjM/edit?pli=1#gid=1776822398)
+
 
 ### Re-purge 
 
