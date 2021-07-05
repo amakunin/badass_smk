@@ -6,7 +6,7 @@ rule nucmer_scaff_to_ref:
     params: 
         prefix="{species}/working/dot/{sample}.{assembler}.{date}.{scaff_dir}.{purge_dir}.hic.{hic_sample}.vs.{ref}",
         queue="long"
-    log: "{species}/working/dot/{sample}.{assembler}.{date}.{scaff_dir}.{purge_dir}.hic.{hic_sample}.vs.{ref}.log"
+    # log: "{species}/working/dot/{sample}.{assembler}.{date}.{scaff_dir}.{purge_dir}.hic.{hic_sample}.vs.{ref}.log"
     conda: "nucmer_dotplot.yml"
     resources:
         mem_mb=12000
@@ -23,8 +23,8 @@ rule nucmer_scaff_to_scaff:
         prefix="{species}/working/dot/{sample_r}.{assembler}.{date}.{scaff_dir_r}.{purge_dir_r}.hic.{hic_sample_r}/"
                "vs.{sample_q}.{scaff_dir_q}.{purge_dir_q}.hic.{hic_sample_q}",
         queue="long"
-    log: "{species}/working/dot/{sample_r}.{assembler}.{date}.{scaff_dir_r}.{purge_dir_r}.hic.{hic_sample_r}/"
-            "vs.{sample_q}.{scaff_dir_q}.{purge_dir_q}.hic.{hic_sample_q}.log"
+    # log: "{species}/working/dot/{sample_r}.{assembler}.{date}.{scaff_dir_r}.{purge_dir_r}.hic.{hic_sample_r}/"
+    #         "vs.{sample_q}.{scaff_dir_q}.{purge_dir_q}.hic.{hic_sample_q}.log"
     conda: "nucmer_dotplot.yml"
     resources:
         mem_mb=12000
