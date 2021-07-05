@@ -1,4 +1,4 @@
-# from datetime import datetime
+from datetime import datetime
 
 configfile: 'badass_smk/config.yaml'
 
@@ -18,7 +18,7 @@ wildcard_constraints:
     # date - digits only
     date='\d+',
     # today is today
-    # today=datetime.today().strftime('%Y%m%d')
+    today=datetime.today().strftime('%Y%m%d'),
     fa_suffix='fa|fasta'
 
 # rule per tool
