@@ -2,7 +2,7 @@ import glob
 import yaml
 import os
 
-localrules: draft_assembly_polished_scaffolds, generate_yaml_polished_scaffolds, draft_assembly_scaffolds, generate_yaml_scaffolds
+localrules: draft_assembly_polished_scaffolds, generate_yaml_polished_scaffolds, draft_assembly_scaffolds, generate_yaml_scaffolds, pretext_mq0_to_asm_polished, pretext_mq0_to_asm
 
 asm_dir=os.environ["WD"]
 
@@ -148,21 +148,33 @@ rule generate_yaml_polished_scaffolds:
 
 rule draft_assembly_scaffolds:
     input:
-        kmc="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/kmc/{sample}.scaff.ccs.k21.kat.png",
-        busco="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done",
-        scaff="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.fasta",
-        postsalsa="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/postsalsa.done",
-        # pretext_mq0="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.mq0.pretext"        
+        kmc=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/kmc/{orig_sample}.scaff.ccs.k21.kat.png", wildcards),
+        busco=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done", wildcards),
+        scaff=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.fasta", wildcards),
+        postsalsa=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/postsalsa.done", wildcards),
+        # pretext_mq0=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+        #   "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.mq0.pretext", wildcards),        
     output:
         touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.hic.{hic_sample}.done")
     params:
-        in_htigs="{species}/working/{sample}.{assembler}.{date}/{purge_dir}/purged.htigs.fa.gz",
-        in_mito="{species}/working/{sample}.{assembler}.{date}/mito-{purge_dir}/final_mitogenome.fasta",
-        in_agp="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.agp",
-        in_hic="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/salsa_scaffolds.hic",
-        in_pretext="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.pretext",
-        in_kat="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/kmc/{sample}.scaff.ccs.k21.stacked.kat.png",
-        in_stats="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.fasta.stats",
+        in_htigs=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "{purge_dir}/purged.htigs.fa.gz", wildcards),
+        in_mito=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "mito-{purge_dir}/final_mitogenome.fasta", wildcards),
+        in_agp=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.agp", wildcards),
+        in_hic=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/salsa_scaffolds.hic", wildcards),
+        in_pretext=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.pretext", wildcards),
+        in_kat=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/kmc/{orig_sample}.scaff.ccs.k21.stacked.kat.png", wildcards),
+        in_stats=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.fasta.stats", wildcards),
         out_dir="{species}/assembly/draft/{sample}.{today}",
         out_primary="{species}/assembly/draft/{sample}.{today}/{sample}.{today}.scaff.fa.gz",
         out_htigs="{species}/assembly/draft/{sample}.{today}/{sample}.{today}.haplotigs.fa.gz",
@@ -190,7 +202,8 @@ rule draft_assembly_scaffolds:
 rule generate_yaml_scaffolds:
     input:
         "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.hic.{hic_sample}.done",
-        busco="{species}/working/{sample}.{assembler}.{date}/scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done"
+        busco=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+            "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done", wildcards),
     output:
         "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.hic.{hic_sample}.draft.yaml"
     params:
@@ -207,7 +220,7 @@ rule generate_yaml_scaffolds:
         stats=asm_dir+"{species}/assembly/draft/{sample}.{today}/{sample}.{today}.scaff.stats",
         hic_map_img="",
         jira_queue="RC",
-        reads_pacbio=asm_dir+"{species}/genomic_data/{sample}/pacbio/fasta/*.filtered.fasta.gz",
+        reads_pacbio=lambda wildcards: get_orig_path(asm_dir+"{species}/genomic_data/{orig_sample}/pacbio/fasta/*.filtered.fasta.gz", wildcards),
         reads_hic=asm_dir+"{species}/genomic_data/{hic_sample}/hic-arima2/*cram",
         pipeline=['hifiasm (version 0.14)','purge_dups (version 1.2.3)','MitoHiFi (v2)','salsa (v2.2-4c80ac1)'],
         notes=""
@@ -279,3 +292,26 @@ rule pretext_mq0:
     shell:
         "bwa mem -t {threads} -p {input.scaff} {input.hic_fq} | "
         "PretextMap --sortby length --mapq 0 -o {output}"
+
+rule pretext_mq0_to_asm_polished:
+    input:
+        pretext_mq0=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+             "scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.mq0.pretext", wildcards)
+    output:
+        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.polished.hic.{hic_sample}.mq0.done")
+    params:
+        out_pretext_mq0="{species}/assembly/draft/{sample}.{today}/{sample}.{today}.scaff_polished.mq0.pretext"
+    shell:
+        "cp {input.pretext_mq0} {params.out_pretext_mq0}"
+
+rule pretext_mq0_to_asm:
+    input:
+        pretext_mq0=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
+             "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.mq0.pretext", wildcards)
+    output:
+        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.hic.{hic_sample}.mq0.done")
+    params:
+        out_pretext_mq0="{species}/assembly/draft/{sample}.{today}/{sample}.{today}.scaff.mq0.pretext"
+    shell:
+        "cp {input.pretext_mq0} {params.out_pretext_mq0}"
+
