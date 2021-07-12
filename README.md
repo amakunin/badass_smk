@@ -63,7 +63,7 @@ bash badass_smk/submit.sh -n Anopheles_funestus/working/idAnoFuneDA-402_05.hifia
 
 Curation inputs (including MAPQ0 pretext)
 ```
-bash badass_smk/submit.sh -n Anopheles_funestus/assembly/draft/idAnoFuneDA-408_06.PB.asm1.purge1.polish1.scaff1/idAnoFuneDA-408_06.hifiasm.20210327.purging.polished.hic.idAnoFuneDA-408_05.draft.yaml
+bash badass_smk/submit.sh -n Anopheles_funestus/assembly/draft/idAnoFuneDA-408_06.20210712/idAnoFuneDA-408_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-408_05.draft.yaml
 ```
 
 ### Comparative

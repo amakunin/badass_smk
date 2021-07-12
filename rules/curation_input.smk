@@ -24,7 +24,7 @@ rule test_replace:
     input:
         lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.fasta", wildcards),
     output:
-        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.polished.hic.{hic_sample}.test"
+        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff_polished.{purge_dir}.hic.{hic_sample}.test"
     shell:
         "cp {input} {output}"
 
@@ -42,7 +42,7 @@ rule draft_assembly_polished_scaffolds:
         # pretext_mq0=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
         #     "scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.mq0.pretext", wildcards)    
     output:
-        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.polished.hic.{hic_sample}.done")
+        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff_polished.{purge_dir}.hic.{hic_sample}.done")
     params:
         in_htigs=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
             "polished-{purge_dir}/haplotigs.fasta", wildcards),
@@ -85,11 +85,11 @@ rule draft_assembly_polished_scaffolds:
 
 rule generate_yaml_polished_scaffolds:
     input:
-        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.polished.hic.{hic_sample}.done",
+        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff_polished.{purge_dir}.hic.{hic_sample}.done",
         busco=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
             "scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done", wildcards),
     output:
-        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.polished.hic.{hic_sample}.draft.yaml"
+        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff_polished.{purge_dir}.hic.{hic_sample}.draft.yaml"
     params:
         species="{species}",
         specimen="{sample}",
@@ -159,7 +159,7 @@ rule draft_assembly_scaffolds:
         # pretext_mq0=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
         #   "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.mq0.pretext", wildcards),        
     output:
-        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.hic.{hic_sample}.done")
+        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff.{purge_dir}.hic.{hic_sample}.done")
     params:
         in_htigs=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
             "{purge_dir}/purged.htigs.fa.gz", wildcards),
@@ -201,11 +201,11 @@ rule draft_assembly_scaffolds:
 
 rule generate_yaml_scaffolds:
     input:
-        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.hic.{hic_sample}.done",
+        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff.{purge_dir}.hic.{hic_sample}.done",
         busco=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
             "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/busco5/busco.done", wildcards),
     output:
-        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.hic.{hic_sample}.draft.yaml"
+        "{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff.{purge_dir}.hic.{hic_sample}.draft.yaml"
     params:
         species="{species}",
         specimen="{sample}",
@@ -238,14 +238,14 @@ rule generate_yaml_scaffolds:
 
         params.species = params.species.replace("_"," ")
 
-        params.reads_pacbio = list(glob.glob(params.reads_pacbio))
-        params.reads_hic = list(glob.glob(params.reads_hic))
+        params.reads_pacbio = list(glob.glob(params.reads_pacbio[0]))
+        params.reads_hic = list(glob.glob(params.reads_hic[0]))
 
         with open(output[0], 'w') as outfile:
             yaml.dump(dict(params), outfile, sort_keys=False, indent=2)
             # manually add stats
             outfile.write("stats: |\n")
-            with open(input.busco[:-10] + "short_summary.specific.diptera_odb10...txt") as infile:
+            with open(input.busco[0][:-10] + "short_summary.specific.diptera_odb10...txt") as infile:
                 for line in infile:
                     line=line.strip()
                     if line.startswith('C'):
@@ -287,7 +287,7 @@ rule pretext_mq0:
         queue="long",
         cram_pattern="{species}/genomic_data/{hic_sample}/hic-arima2/*cram",
     conda: "pretext.yml"
-    threads: 24
+    threads: 32
     resources: mem_mb=24000
     shell:
         "bwa mem -t {threads} -p {input.scaff} {input.hic_fq} | "
@@ -298,7 +298,7 @@ rule pretext_mq0_to_asm_polished:
         pretext_mq0=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
              "scaff_polished.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.mq0.pretext", wildcards)
     output:
-        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.polished.hic.{hic_sample}.mq0.done")
+        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff_polished.{purge_dir}.hic.{hic_sample}.mq0.done")
     params:
         out_pretext_mq0="{species}/assembly/draft/{sample}.{today}/{sample}.{today}.scaff_polished.mq0.pretext"
     shell:
@@ -309,7 +309,7 @@ rule pretext_mq0_to_asm:
         pretext_mq0=lambda wildcards: get_orig_path("{species}/working/{orig_sample}.{assembler}.{date}/"
              "scaff.{purge_dir}.hic.{hic_sample}/out.break.salsa2/scaffolds_FINAL.mq0.pretext", wildcards)
     output:
-        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.{purge_dir}.hic.{hic_sample}.mq0.done")
+        touch("{species}/assembly/draft/{sample}.{today}/{sample}.{assembler}.{date}.scaff.{purge_dir}.hic.{hic_sample}.mq0.done")
     params:
         out_pretext_mq0="{species}/assembly/draft/{sample}.{today}/{sample}.{today}.scaff.mq0.pretext"
     shell:
