@@ -21,16 +21,21 @@ source /software/tola/installs/vr-runner/etc/bashrc
 bash badass_smk/submit.sh -n --config purge_cutoffs=\"5,40,140\" purge_no_e=True -p Anopheles_coustani/working/idAnoZiCoDA-A2_x.hifiasm.20210327/purging_40_e/purge_and_qc.done
 ```
 
-Mitohifi on assembly and reads, create an assembly with fixed mitochondrial genome
+Mitohifi on assembly and reads, create an assembly with fixed mitochondrial genome, and check the mitogenome annotation for obvious problems
 ```
 bash badass_smk/submit.sh -n Anopheles_coustani/working/idAnoCousDA-361_x.hifiasm.20210327/mito-purging/mitohifi_asm_and_reads.done
+```
+
+In case mitogenome needs to be substituted from hicanu or reads:
+```
+bash badass_smk/submit.sh -n Sabethes_cyaneus/working/idSabCyanKW18_F2.hifiasm.20210516/mito-purging/purged_and_htigs_and_mito_from_{hicanu,reads}.fasta
 ```
 
 Output filenames of mitohifi and input filenames for downstream processing are currently incompatible, so one needs to rename manually before next step of processing
 ```
 cd Anopheles_coustani/working/idAnoCousDA-361_x.hifiasm.20210327/mito-purging/
 mv purged_and_htigs_and_mito.fasta purged_and_htigs_and_mito.fa
-```
+``` 
 
 ### Scaffolding
 
@@ -63,7 +68,19 @@ bash badass_smk/submit.sh -n Anopheles_funestus/working/idAnoFuneDA-402_05.hifia
 
 Curation inputs (including MAPQ0 pretext)
 ```
-bash badass_smk/submit.sh -n Anopheles_funestus/assembly/draft/idAnoFuneDA-408_06.20210712/idAnoFuneDA-408_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-408_05.draft.yaml
+bash badass_smk/submit.sh -n Anopheles_funestus/assembly/draft/idAnoFuneDA_408_06.20210712/idAnoFuneDA_408_06.hifiasm.20210327.scaff_polished.purging.hic.idAnoFuneDA-408_05.draft.yaml
+```
+where `idAnoFuneDA_408_06` is derived from `idAnoFuneDA-408_06` by replacement of dash with underscore, `20210712` is today's date
+
+
+In cases when mitochondrial genome in hifiasm assembly is not good enough, replace it manually with mitogenome from hicanu assembly or reads
+```
+gzip -c Anopheles_aquasalis/working/idAnoAquaMG-Q_14.hicanu.20210327/mito-purging/final_mitogenome.fasta > Anopheles_aquasalis/assembly/draft/idAnoAquaMG_Q_14.20210712/idAnoAquaMG_Q_14.20210712.mito.fa.gz
+```
+
+For assemblies without PacBio data, mitochondrial contigs should be identified separately
+```
+badass_smk/submit.sh -n Anopheles_bellator/working/idAnoBellAS-SP24_06.tshea.20210511/mitohifi/final_mitogenome.check.txt
 ```
 
 ### Comparative
@@ -85,7 +102,7 @@ Transcriptome assembly and busco
 bash badass_smk/submit.sh -n Anopheles_darlingi/working/idAnoDarlMG-G_01.trinity/busco5/busco.done
 ```
 
-Remove assembly intermediate files (up to 100k per sample)
+Compress assembly intermediate files (up to 100k per sample)
 ```
 bash badass_smk/submit.sh -n Anopheles_darlingi/working/idAnoDarlMG-G_01.trinity/read_partitions.tar.gz
 ```
