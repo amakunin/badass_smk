@@ -105,7 +105,7 @@ rule generate_yaml_polished_scaffolds:
         hic_map_img="",
         jira_queue="GRIT",
         reads_pacbio=lambda wildcards: get_orig_path(asm_dir+"{species}/genomic_data/{orig_sample}/pacbio/fasta/*.filtered.fasta.gz", wildcards),
-        reads_10x=lambda wildcards: get_orig_path(asm_dir+"{species}/genomic_data/{sample}/10x/*.fastq.gz", wildcards),
+        reads_10x=lambda wildcards: get_orig_path(asm_dir+"{species}/genomic_data/{orig_sample}/10x/*.fastq.gz", wildcards),
         reads_hic=asm_dir+"{species}/genomic_data/{hic_sample}/hic-arima2/*cram",
         pipeline=['hifiasm (version 0.14)','purge_dups (version 1.2.3)','longranger (version 2.2.2)',
                   'freebayes (v1.3.1)','MitoHiFi (v2)','salsa (v2.2-4c80ac1)'],
@@ -252,7 +252,7 @@ rule generate_yaml_scaffolds:
                         outfile.write(line + '\n')
             with open(params.stats) as infile:
                 for line in infile:
-                    outfile.write(line)
+                    outfile.write('  ' + line)
 
 rule bwa_index:
     input: "{prefix}.fasta"

@@ -6,7 +6,8 @@ rule longranger_make_ref:
         touch("{species}/working/{sample}.{assembler}.{date}/wdl-{purge_dir}/make_ref.done"),
         directory("{species}/working/{sample}.{assembler}.{date}/wdl-{purge_dir}/refdata-purged_and_htigs_and_mito")
     params:
-        longranger="../../../../scripts/longranger-2.2.2/longranger-cs/2.2.2/bin/longranger",
+        # longranger="../../../../scripts/longranger-2.2.2/longranger-cs/2.2.2/bin/longranger",
+        longranger="/software/tola/bin/longranger-2.2.2/longranger-cs/2.2.2/bin/longranger",
         working_dir="{species}/working/{sample}.{assembler}.{date}/wdl-{purge_dir}/",
         ref="../mito-{purge_dir}/purged_and_htigs_and_mito.fa"
     threads: 2

@@ -4,7 +4,7 @@
 
 localrules: combine_purged_and_htigs, init_mito_reads, \
             replace_mt_in_asm, find_mito_reference_reads, \
-            find_mito_reference_asm, check_mito
+            find_mito_reference_asm, init_mito_asm_nopb, check_mito
 
 rule combine_purged_and_htigs:
     input:
@@ -136,6 +136,7 @@ rule find_mito_reference_reads:
 
 # ideally, we should use dynamic output names from find_mito_reference_reads
 # and non-hard-coded name for trimmed reads directory
+# note date mismatch between hicanu and reads
 rule mitohifi_reads:
     input:
         reads="{species}/working/{sample}.hicanu.20210327/{sample}.trimmedReads.fasta",
@@ -165,4 +166,52 @@ rule check_mito:
     conda: "../scripts/check_mito.yml"
     shell:
         "python3 badass_smk/scripts/check_mito.py {params.query} {params.ref} > {output}"
+
+
+
+# singularity cannot mkdir, workaround
+rule init_mito_asm_nopb:
+    input:
+        "{species}/working/{sample}.tshea.20210511/assembly.scaffolds.fasta"
+    output:
+        "{species}/working/{sample}.tshea.20210511/mitohifi/init.done"
+    shell:
+        "touch {output}"
+
+rule find_mito_reference_asm_nopb:
+    input: 
+        "{species}/working/{sample}.tshea.20210511/mitohifi/init.done"
+    output:
+        touch("{species}/working/{sample}.tshea.20210511/mitohifi/find_mito_ref.done")
+    params:
+        species="{species}",
+        email=config["email"],
+        outfolder="{species}/working/{sample}.tshea.20210511/mitohifi/"
+    singularity:
+        "scripts/mitohifi-v2.sif"
+    shell:
+        "cd {params.outfolder} && "
+        "findMitoReference.py --species {params.species} --email {params.email} "
+        "--outfolder ./ --min_length 14500"
+
+# ideally, we should use dynamic output names from find_mito_reference_asm
+rule mitohifi_asm_nopb:
+    input:
+        asm="{species}/working/{sample}.tshea.20210511/assembly.scaffolds.fasta",
+        ref="{species}/working/{sample}.tshea.20210511/mitohifi/find_mito_ref.done"
+    output:
+        "{species}/working/{sample}.tshea.20210511/mitohifi/final_mitogenome.fasta",
+        "{species}/working/{sample}.tshea.20210511/mitohifi/final_mitogenome.gb",
+    params:
+        outfolder="{species}/working/{sample}.tshea.20210511/mitohifi/",
+        asm="../assembly.scaffolds.fasta"
+    singularity:
+        "scripts/mitohifi-v2.sif"
+    resources:
+        mem_mb=8000
+    threads: 4
+    shell:
+        "cd {params.outfolder} && "
+        "mitohifi_v2.py -c {params.asm} "
+        "-f *.fasta -g *.gb -t {threads} -o 5"
 

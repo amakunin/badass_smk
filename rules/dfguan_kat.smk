@@ -33,14 +33,14 @@ rule dfguan_kmc_count_scaffolds:
         "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21.kmc_pre",
         "{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21.kmc_suf",
     params:
-        kmc_bin="/nfs/users/nfs_d/dg30/luster_dg30/pub/kmc_bins/bin/kmc",
+        kmc_bin="kmc", #"/nfs/users/nfs_d/dg30/luster_dg30/pub/kmc_bins/bin/kmc",
         kmer_size=21,
         output_prefix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21",
         work_dir="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/tmp.{sample}.{scaff_dir}.k21",
         mem_gb=16 # don"t forget to link to resources.mem_mb
     resources:
         mem_mb=16 * 1024
-    conda: "dfguan_kat.yml" 
+    singularity: "/software/tola/images/kmc_dfguan-3.1.0-c05a5f9.sif" 
     threads: 4
     shell:
         "mkdir -p {params.work_dir} && "
@@ -54,7 +54,7 @@ rule dfguan_kmc_count_ccs_reads:
         "{species}/genomic_data/{sample}/pacbio/kmc/{sample}.ccs.k21.kmc_pre",
         "{species}/genomic_data/{sample}/pacbio/kmc/{sample}.ccs.k21.kmc_suf"
     params:
-        kmc_bin="/nfs/users/nfs_d/dg30/luster_dg30/pub/kmc_bins/bin/kmc",
+        kmc_bin="kmc", #"/nfs/users/nfs_d/dg30/luster_dg30/pub/kmc_bins/bin/kmc",
         kmer_size=21,
         out_prefix="{species}/genomic_data/{sample}/pacbio/kmc/{sample}.ccs.k21",
         work_dir="{species}/genomic_data/{sample}/pacbio/kmc/tmp_k21", # unique for each task to avoid same-file writing SegFault
@@ -63,7 +63,7 @@ rule dfguan_kmc_count_ccs_reads:
         mem_gb=12 # don"t forget to link to resources.mem_mb
     resources:
         mem_mb=12 * 1024
-    conda: "dfguan_kat.yml" 
+    singularity: "/software/tola/images/kmc_dfguan-3.1.0-c05a5f9.sif" 
     threads: 4
     shell:
         # The lower (-ci) and upper (-cs) bounds exclude k-mers with counts outside these boundaries
@@ -81,12 +81,12 @@ rule dfguan_kmc_analyse_scaffolds_ccs:
     output:
         matrix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.ccs.k21.mx"
     params:
-        kmc_bin="/nfs/users/nfs_d/dg30/luster_dg30/pub/kmc_bins/bin/kmc_tools",
+        kmc_bin="kmc_tools", #"/nfs/users/nfs_d/dg30/luster_dg30/pub/kmc_bins/bin/kmc",
         assembly_prefix="{species}/working/{sample}.{assembler}.{date}/{scaff_dir}.{purge_dir}.hic.{hic_sample}/{salsa_dir}/kmc/{sample}.{scaff_dir}.k21",
         reads_prefix="{species}/genomic_data/{sample}/pacbio/kmc/{sample}.ccs.k21"
     resources:
         mem_mb=4096
-    conda: "dfguan_kat.yml"
+    singularity: "/software/tola/images/kmc_dfguan-3.1.0-c05a5f9.sif" 
     shell:
         "{params.kmc_bin} analyze {params.reads_prefix} {params.assembly_prefix} {output.matrix}"
 
