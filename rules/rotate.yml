@@ -1,0 +1,7 @@
+name: wdl_polish_salsa
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - biopython =1.75

@@ -4,7 +4,7 @@
 
 localrules: combine_purged_and_htigs, init_mito_reads, \
             replace_mt_in_asm, find_mito_reference_reads, \
-            find_mito_reference_asm, init_mito_asm_nopb, check_mito
+            find_mito_reference_asm, init_mito_asm_nopb, check_mito, rotfix_final_mt
 
 rule combine_purged_and_htigs:
     input:
@@ -214,4 +214,31 @@ rule mitohifi_asm_nopb:
         "cd {params.outfolder} && "
         "mitohifi_v2.py -c {params.asm} "
         "-f *.fasta -g *.gb -t {threads} -o 5"
+
+# rotate mt to start with tRNA-Ile
+# pick up start point and complement status from .gb
+rule rotfix_final_mt:
+    input:
+        fa="{prefix}/final_mitogenome.fasta",
+        gb="{prefix}/final_mitogenome.gb"
+    output:
+        "{prefix}/final_mitogenome_rotfix.fa"
+    conda:
+        "rotate.yml"
+    shell:
+        """
+        ile_coord=$(grep -B1 "Ile" {input.gb} | grep "gene")
+        echo $ile_coord
+        if [[ $ile_coord == *"complement"* ]]; then
+            start=$(echo $ile_coord | cut -d '.' -f3 | cut -d ')' -f1)
+            echo Rotating with rc from $start
+            python scripts/rotate.py -c -r $start -i {input.fa} > {output}
+        elif [[ $ile_coord == *".."* ]]; then
+            start=$(echo $ile_coord | rev | cut -d ' ' -f1 | rev | cut -d '.' -f1)
+            echo Rotating from $start
+            python scripts/rotate.py -r $start -i {input.fa} > {output}
+        else
+            exit 1
+        fi
+        """
 
