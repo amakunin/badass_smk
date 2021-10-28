@@ -76,6 +76,12 @@ source /software/tola/installs/vr-runner/etc/bashrc
 bash badass_smk/submit.sh -n Anopheles_funestus/working/idAnoFuneDA-402_05.hifiasm.20210327/scaff.purging.hic.idAnoFuneDA-402_09.qc.done
 ```
 
+Re-scaffolding tshea assemblies with fixed Salsa - similar to scaffolding without polishing
+```
+source /software/tola/installs/vr-runner/etc/bashrc
+bash badass_smk/submit.sh -n Anopheles_bellator/working/idAnoBellAS-SP24_06.tshea.20210511/scaff.scaffolds.hic.idAnoBellAS-SP24_05.qc.done
+```
+
 ### Curation
 
 Curation inputs (including MAPQ0 pretext)
