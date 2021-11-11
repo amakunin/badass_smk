@@ -42,9 +42,10 @@ Fix mitogenome rotation and orientation to match Anopheles mt in GenBank which s
 bash badass_smk/submit.sh Anopheles_funestus/working/idAnoFuneDA-386_01.hicanu.20210327/mito-purging/final_mitogenome_rotfix.fa
 ```
 
-Rotation issue was discovered after bulk of curation requests were submitted, so we need to manually replace mt in draft directory
+Rotation issue was discovered after bulk of curation requests were submitted, so we need to manually replace mt in draft directory. 
+Note that if the assembly already entered curation (true for most if not all samples), we need to replace decontaminated mt instance
 ```
-gzip -c Anopheles_aquasalis/working/idAnoAquaMG-Q_14.hicanu.20210327/mito-purging/final_mitogenome_rotfix.fa > Anopheles_aquasalis/assembly/draft/idAnoAquaMG_Q_14.20210712/idAnoAquaMG_Q_14.20210712.mito.fa.gz
+gzip -c Anopheles_aquasalis/working/idAnoAquaMG-Q_14.hicanu.20210327/mito-purging/final_mitogenome_rotfix.fa > Anopheles_aquasalis/assembly/draft/idAnoAquaMG_Q_14.20210712/idAnoAquaMG_Q_14.20210712.mito.decontaminated.fa.gz
 ```
 
 TODO guidelines on replacing mt in curated genomes
@@ -90,7 +91,7 @@ In cases when mitochondrial genome in hifiasm assembly is not good enough, repla
 gzip -c Anopheles_aquasalis/working/idAnoAquaMG-Q_14.hicanu.20210327/mito-purging/final_mitogenome.fasta > Anopheles_aquasalis/assembly/draft/idAnoAquaMG_Q_14.20210712/idAnoAquaMG_Q_14.20210712.mito.fa.gz
 ```
 
-For assemblies without PacBio data, mitochondrial contigs should be identified separately
+For assemblies without PacBio data, mitochondrial contigs should be identified separately - usually this does not work
 ```
 badass_smk/submit.sh -n Anopheles_bellator/working/idAnoBellAS-SP24_06.tshea.20210511/mitohifi/final_mitogenome.check.txt
 ```
