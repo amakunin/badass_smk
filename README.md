@@ -37,13 +37,15 @@ cd Anopheles_coustani/working/idAnoCousDA-361_x.hifiasm.20210327/mito-purging/
 mv purged_and_htigs_and_mito.fasta purged_and_htigs_and_mito.fa
 ``` 
 
+### Mitogenome rotation fix
+
 Fix mitogenome rotation and orientation to match Anopheles mt in GenBank which start from tRNA-Ile on + strand
 ```
 bash badass_smk/submit.sh Anopheles_funestus/working/idAnoFuneDA-386_01.hicanu.20210327/mito-purging/final_mitogenome_rotfix.fa
 ```
 
 Rotation issue was discovered after bulk of curation requests were submitted, so we need to manually replace mt in draft directory. 
-Note that if the assembly already entered curation (true for most if not all samples), we need to replace decontaminated mt instance
+Note that if the assembly already entered curation (true for most if not all samples), we need to replace decontaminated mt instance.
 ```
 gzip -c Anopheles_aquasalis/working/idAnoAquaMG-Q_14.hicanu.20210327/mito-purging/final_mitogenome_rotfix.fa > Anopheles_aquasalis/assembly/draft/idAnoAquaMG_Q_14.20210712/idAnoAquaMG_Q_14.20210712.mito.decontaminated.fa.gz
 ```
