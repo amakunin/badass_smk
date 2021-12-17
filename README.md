@@ -58,6 +58,12 @@ Prior to scaffolding in funestus and gambiae, need to collate crams and remove s
 ```
 bash badass_smk/submit.sh -n Anopheles_gambiae/genomic_data/idAnoGambDA-150_06/hic-arima2/coord_sorted/collate.done
 ```
+Collated cram then needs to be unaligned and indexed for curation purposes (samtools v.1.14)
+```
+samtools view -bh 35760_2#9.cram | /software/npg/current/bin/bamreset | samtools view -hC > 35760_2#9.unaligned.cram
+samtools index 35760_2#9.unaligned.cram
+```
+
 
 Prior to scaffolding in purge_e contigs, need to cut by Ns
 ```
