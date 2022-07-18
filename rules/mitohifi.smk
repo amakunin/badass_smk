@@ -4,7 +4,7 @@
 
 localrules: combine_purged_and_htigs, init_mito_reads, \
             replace_mt_in_asm, find_mito_reference_reads, \
-            find_mito_reference_asm, init_mito_asm_nopb, check_mito, rotfix_final_mt
+            find_mito_reference_asm, init_mito_asm_nopb, check_mito, rotfix_final_mt, replace_mt_in_curated
 
 rule combine_purged_and_htigs:
     input:
@@ -217,6 +217,7 @@ rule mitohifi_asm_nopb:
 
 # rotate mt to start with tRNA-Ile
 # pick up start point and complement status from .gb
+# NB does not work for alternate mt contigs
 rule rotfix_final_mt:
     input:
         fa="{prefix}/final_mitogenome.fasta",
@@ -240,5 +241,36 @@ rule rotfix_final_mt:
         else
             exit 1
         fi
+        """
+
+# given final mitogenome rotfix and a curated assembly
+# replace scaff_MT in curated assembly with rotfix final mitogenome
+# NB introduced check for bak file to avoid overwriting
+# NB lots of directories created in output - workaround for differences in curated dir naming
+rule replace_mt_in_curated:
+    input:
+        asm="{species}/assembly/curated/{asm_prefix}.curated_primary.fa",
+        mt="{species}/working/{sample}.{assembler}.{date}/mito-{purge_dir}/final_mitogenome_rotfix.fa"
+    output:
+        touch("{species}/working/{sample}.{assembler}.{date}/mito-{purge_dir}/{asm_prefix}.replace_curated.done")
+    params:
+        asm_bak="{species}/assembly/curated/{asm_prefix}.curated_primary.fa.bak",
+        reheader_mt="{species}/working/{sample}.{assembler}.{date}/mito-{purge_dir}/final_mitogenome_rotfix.fa.tmp"
+    conda:
+        "mitohifi_post.yml"
+    shell:
+        """
+        if [[ -f {params.asm_bak} ]]; then
+            echo "assembly backup exists, exiting"
+            exit 1
+        fi
+
+        echo '>scaffold_MT' > {params.reheader_mt}
+        tail -n +2 {input.mt} >> {params.reheader_mt}
+
+        mv {input.asm} {params.asm_bak}
+        faFilter -v name='scaffold_MT' {params.asm_bak} /dev/stdout | cat /dev/stdin {params.reheader_mt} > {input.asm}
+
+        rm {params.reheader_mt}
         """
 

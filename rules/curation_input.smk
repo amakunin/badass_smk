@@ -314,4 +314,3 @@ rule pretext_mq0_to_asm:
         out_pretext_mq0="{species}/assembly/draft/{sample}.{today}/{sample}.{today}.scaff.mq0.pretext"
     shell:
         "cp {input.pretext_mq0} {params.out_pretext_mq0}"
-
